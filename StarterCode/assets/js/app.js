@@ -7,8 +7,8 @@ d3.csv("../StarterCode/assets/data/data.csv").then(function(census_data,err){
     var margin = {
         top:50,
         bottom:50,
-        left:20,
-        right:20
+        left:80,
+        right:80
     }
     
     // var states = census_data.map(function(d){
@@ -47,7 +47,7 @@ d3.csv("../StarterCode/assets/data/data.csv").then(function(census_data,err){
 
     var x_scale = d3.scaleLinear()
         .range([0,width])
-        .domain([d3.min(census_data,d => d[chosen_x]*0.8),d3.max(census_data,d => d[chosen_x])*1.2])
+        .domain([d3.min(census_data,d => d[chosen_x]*0.9),d3.max(census_data,d => d[chosen_x])*1.1])
     var y_scale = d3.scaleLinear()
         .range([height,0])
         .domain([d3.min(census_data,d => d[chosen_y]*.7),d3.max(census_data,d => d[chosen_y])*1.2])
@@ -118,5 +118,30 @@ d3.csv("../StarterCode/assets/data/data.csv").then(function(census_data,err){
         .style("fill","white")
         .attr("dx", function(d){return -10})
         .attr("dy", function(d){return 5})
+
+    chartGroup.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 0 - margin.left)
+        .attr("x", 0 - (height / 2))
+        .attr("dy", "1em")
+        .classed("axis-text", true)
+        .text("Healthcare")
+        .attr("value","healthcare");
+    chartGroup.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 15 - margin.left)
+        .attr("x", 0 - (height / 2))
+        .attr("dy", "1em")
+        .classed("axis-text", true)
+        .text("Poverty(%)")
+        .attr("value","poverty")
+        .attr("id","test_bunny")
+
+    d3.select("#test_bunny")
+        .on("click", function(){
+            var value = d3.select(this).attr("value")
+            chosen_x = value
+            console.log(chosen_x)
+        })
     });
     
