@@ -40,7 +40,7 @@ d3.csv("../StarterCode/assets/data/data.csv").then(function(census_data,err){
     
     var yscale = d3.scaleLinear()
         .range([height,0])
-        .domain([0,d3.max(healthcare)]);
+        .domain([0,d3.max(healthcare)+2]);
     
     var bottom_axis = d3.axisBottom(xscale)
     
@@ -64,6 +64,13 @@ d3.csv("../StarterCode/assets/data/data.csv").then(function(census_data,err){
         .attr("fill","black")
         .attr("opacity",".5")
         .attr("stroke","blue")
+    var test = d3.selectAll("#states")
+        .append("text")
+        .attr("x",d => xscale(d.income))
+        .attr("y",d => yscale(d.healthcare))
+        .text(d => d.abbr)
+        .attr("dx", function(d){return -10})
+        .attr("dy", function(d){return 5})
 
     });
     
