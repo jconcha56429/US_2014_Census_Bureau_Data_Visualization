@@ -28,19 +28,7 @@ function build_y_scale(census_data,chosen_y){
         .domain([d3.min(census_data,d => d[chosen_y]*.7),d3.max(census_data,d => d[chosen_y])*1.2])
     return y_scale
 }
-function build_bubbles(census_data,chosen_x,chartGroup,x_scale,y_scale){
-    chartGroup.selectAll("circle")
-    .data(census_data)
-    .enter()
-    .append("g")
-    .append("circle")
-    .attr("cx", d => x_scale(d.income))
-    .attr("cy",d => y_scale(d.healthcare))
-    .attr("r","20")
-    .attr("fill","steelblue")
-    .attr("opacity",".5")
-    .attr("stroke","steelblue")
-}
+
 var x_labels = ["income","obesity","age"]
 var y_labels = ["healthcare","poverty","smokes"]
 
@@ -94,7 +82,29 @@ d3.csv("../StarterCode/assets/data/data.csv").then(function(census_data,err){
             .attr("value",`${label}`)
             .attr("id","test_bunny")
     })
-    build_bubbles(census_data,chosen_x,chartGroup,xScale,yScale)
+    var circle_group = chartGroup.selectAll("circle")
+        .data(census_data)
+        .enter()
+        .append("g")
+        .attr("id","states")
+        .append("circle")
+        .attr("cx", d => xScale(d[chosen_x]))
+        .attr("cy",d => yScale(d[chosen_y]))
+        .attr("r","20")
+        .attr("fill","steelblue")
+        .attr("opacity",".5")
+        .attr("stroke","steelblue")
+        .attr("id","states")
+ 
+    d3.selectAll("#states")
+        .append("text")
+        .attr("x",d => xScale(d.income))
+        .attr("y",d => yScale(d.healthcare))
+        .text(d => d.abbr)
+        .style("fill","white")
+        .attr("dx", function(d){return -10})
+        .attr("dy", function(d){return 5})
+
 
 
 // rough draft creating text labels
@@ -151,14 +161,14 @@ d3.csv("../StarterCode/assets/data/data.csv").then(function(census_data,err){
     //     .attr("stroke","steelblue")
 
 
-    // var test = d3.selectAll("#states")
-    //     .append("text")
-    //     .attr("x",d => x_scale(d.income))
-    //     .attr("y",d => y_scale(d.healthcare))
-    //     .text(d => d.abbr)
-    //     .style("fill","white")
-    //     .attr("dx", function(d){return -10})
-    //     .attr("dy", function(d){return 5})
+    // var labels = d3.selectAll("#states")
+        // .append("text")
+        // .attr("x",d => x_scale(d.income))
+        // .attr("y",d => y_scale(d.healthcare))
+        // .text(d => d.abbr)
+        // .style("fill","white")
+        // .attr("dx", function(d){return -10})
+        // .attr("dy", function(d){return 5})
 
     // chartGroup.append("text")
     //     .attr("transform", "rotate(-90)")
