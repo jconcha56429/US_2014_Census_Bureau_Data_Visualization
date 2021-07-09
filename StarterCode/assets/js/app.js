@@ -41,18 +41,27 @@ d3.csv("../StarterCode/assets/data/data.csv").then(function(census_data,err){
         .attr("transform", `translate(${margin.left}, ${margin.top})`)
         .attr("id","test");
 
-
     var xScale = build_x_scale(census_data,chosen_x)
     var xAxis = d3.axisBottom(xScale)
-
-    var yScale = build_x_scale(census_data,chosen_y)
-    var yAxis = d3.axisBottom(yScale)
 
     chartGroup.append("g")
         .attr("transform",`translate(0,${height})`)
         .call(xAxis)
         .attr("id","x_axis")
-
+// x_labels.forEach(label=> 
+//     chartGroup.append("text")
+//         .attr("x",width/2.2)
+//         .attr("y",height + margin.top)
+//         .attr("id", "x_label")
+//         .text(`${label}`))
+x_labels.forEach(function(label,i){
+    chartGroup.append("text")
+    .attr("x",width/2.2)
+    .attr("y",height + margin.top - i*15)
+    .attr("id", "x_label")
+    .text(`${label} (%)`)
+    .attr("value",`${label}`)
+})
 
 // rough draft creating text labels
     // var labels = chartGroup.append("text")
