@@ -39,7 +39,6 @@ d3.csv("../StarterCode/assets/data/data.csv").then(function(census_data,err){
         data.healthcare = +data.healthcare
     })
     
-
     var svg = d3.select("#scatter_plot")
         .append("svg")
         .attr("height", svg_height)
@@ -59,7 +58,8 @@ d3.csv("../StarterCode/assets/data/data.csv").then(function(census_data,err){
 
     var yScale = build_y_scale(census_data,chosen_y)
     var yAxis = d3.axisLeft(yScale)
-    chartGroup.append("g")
+    
+    var y_axis = chartGroup.append("g")
         .call(yAxis)
         .attr("id","y_axis")
 
@@ -68,7 +68,7 @@ d3.csv("../StarterCode/assets/data/data.csv").then(function(census_data,err){
         .attr("x",width/2.2)
         .attr("y",height + margin.top - i*15)
         .attr("id", "x_label")
-        .text(`${label} (%)`)
+        .text(`${label}`)
         .attr("value",`${label}`)
         .attr("id","x")
     })
@@ -97,7 +97,22 @@ d3.csv("../StarterCode/assets/data/data.csv").then(function(census_data,err){
         .attr("opacity",".5")
         .attr("stroke","steelblue")
         .attr("id","states")
- 
+
+    var toolTip = d3.tip()
+        .attr("class", "tooltip")
+        .offset([0, 0])
+        .html(function(d) {
+        return (`State: ${d["state"]}<br>${chosen_x}: ${d[chosen_x]} <br> ${chosen_y}: ${d[chosen_y]}`);
+        });
+    circle_group.call(toolTip)
+    circle_group.on("mouseover",function(data){
+        toolTip.show(data, this)
+    })
+    circle_group.on("mouseout", function(data, index) {
+        toolTip.hide(data);
+      });
+      
+  
     var state_labels = d3.selectAll("#states")
         .append("text")
         .attr("x",d => xScale(d[chosen_x]))
@@ -129,7 +144,7 @@ d3.csv("../StarterCode/assets/data/data.csv").then(function(census_data,err){
 // investigate why this doesn't work but yScale() does \\ 
         var new_y_scale = build_y_scale(census_data,chosen_y)
         var new_left_axis = d3.axisLeft(new_y_scale)
-        d3.select("#y_axis").transition().call(new_left_axis)
+        d3.select("#y_axis").transition().call(yAxis)
 
         circle_group.transition()
         .duration(1000)
@@ -138,7 +153,6 @@ d3.csv("../StarterCode/assets/data/data.csv").then(function(census_data,err){
         state_labels.transition()
         .duration(1000)
         .attr("y",d => yScale(d[chosen_y]))
-
     })
         // 
         // var new_y_scale = build_y_scale(census_data,chosen_y)
