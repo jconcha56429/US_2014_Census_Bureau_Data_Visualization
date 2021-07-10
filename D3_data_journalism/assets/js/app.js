@@ -32,7 +32,7 @@ function build_y_scale(census_data,chosen_y){
 var x_labels = ["income","obesity","age"]
 var y_labels = ["healthcare","poverty","smokes"]
 
-d3.csv("../StarterCode/assets/data/data.csv").then(function(census_data,err){
+d3.csv("../D3_data_journalism/assets/data/data.csv").then(function(census_data,err){
     if (err) throw err;
     census_data.forEach(function(data){
         data.income = +data.income;
