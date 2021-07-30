@@ -1,6 +1,6 @@
 
-var svg_width = 1200;
-var svg_height = 600;
+var svg_width = 1000;
+var svg_height = 500;
 
 var margin = {
     top:80,
@@ -41,12 +41,15 @@ d3.csv("D3_data_journalism/assets/data/data.csv").then(function(census_data,err)
     
     var svg = d3.select("#scatter_plot")
         .append("svg")
-        .attr("height", svg_height)
-        .attr("width", svg_width);
+        // .attr("height", svg_height)
+        // .attr("width", svg_width)
+        .attr("viewBox",`0 0 ${svg_width} ${svg_height} `)
 
     var chartGroup = svg.append("g")
+        // .attr("transform", `translate(${margin.left}, ${margin.top})`)
         .attr("transform", `translate(${margin.left}, ${margin.top})`)
-        .attr("id","test");
+        .attr("id","test")
+
 
     var xScale = build_x_scale(census_data,chosen_x)
     var xAxis = d3.axisBottom(xScale)
@@ -162,6 +165,5 @@ d3.csv("D3_data_journalism/assets/data/data.csv").then(function(census_data,err)
         .duration(1000)
         .attr("y",d => yScale(d[chosen_y]))
     })
-        
     });
     
