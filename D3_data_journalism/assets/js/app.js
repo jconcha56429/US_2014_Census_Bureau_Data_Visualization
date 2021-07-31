@@ -41,12 +41,9 @@ d3.csv("D3_data_journalism/assets/data/data.csv").then(function(census_data,err)
     
     var svg = d3.select("#scatter_plot")
         .append("svg")
-        // .attr("height", svg_height)
-        // .attr("width", svg_width)
         .attr("viewBox",`0 0 ${svg_width} ${svg_height} `)
 
     var chartGroup = svg.append("g")
-        // .attr("transform", `translate(${margin.left}, ${margin.top})`)
         .attr("transform", `translate(${margin.left}, ${margin.top})`)
         .attr("id","test")
 
@@ -65,7 +62,11 @@ d3.csv("D3_data_journalism/assets/data/data.csv").then(function(census_data,err)
     var y_axis = chartGroup.append("g")
         .call(yAxis)
         .attr("id","y_axis")
-
+    var g_title = chartGroup.append("text")
+        .attr("x",width/2.5)
+        .attr("y",height-400)
+        .text(`${chosen_x} by ${chosen_y}`)
+        .attr("id","g_title")
     x_labels.forEach(function(label,i){
         chartGroup.append("text")
         .attr("x",width/2.2)
@@ -75,7 +76,7 @@ d3.csv("D3_data_journalism/assets/data/data.csv").then(function(census_data,err)
         .attr("value",`${label}`)
         .attr("id","x")
     })
-
+    
     y_labels.forEach(function(label,i){
         chartGroup.append("text")
             .attr("transform", "rotate(-90)")
@@ -105,8 +106,10 @@ d3.csv("D3_data_journalism/assets/data/data.csv").then(function(census_data,err)
         .attr("class", "tooltip")
         .offset([0, 0])
         .html(function(d) {
-        return (`State: ${d["state"]}<br>${chosen_x}: ${d[chosen_x]} <br> ${chosen_y}: ${d[chosen_y]}%`);
-        });
+            if(chosen_x=="income"){
+        return (`<strong>State:</strong> ${d["state"]}<br><strong>${chosen_x}:</strong> $${d[chosen_x].toLocaleString("en-US")} <br> <strong>${chosen_y}:</strong> ${d[chosen_y]}%`);
+        }
+        else return(`<strong>State:</strong> ${d["state"]}<br><strong>${chosen_x}:</strong> ${d[chosen_x]} <br> <strong>${chosen_y}:</strong> ${d[chosen_y]}%`)});
     circle_group.call(toolTip)
     circle_group.on("mouseover",function(data){
         toolTip.show(data, this)
@@ -132,11 +135,16 @@ d3.csv("D3_data_journalism/assets/data/data.csv").then(function(census_data,err)
     state_labels.on("mouseout", function(data, index) {
         toolTip.hide(data);
     });
-
+    d3.selectAll("#x").classed("inactive",true)
+    d3.select("#x").classed("active",true).classed("inactive",false)
+    d3.selectAll("#y").classed("inactive",true)
+    d3.select("#y").classed("active",true).classed("inactive",false)
     d3.selectAll("#x").on("click",function(){
         var value = d3.select(this).attr("value")
+
         chosen_x = value
-        
+        d3.select("#g_title").transition().text(`${chosen_x} by ${chosen_y}`)
+
         var new_x_scale = build_x_scale(census_data,chosen_x)
         var new_bottom_axis = d3.axisBottom(new_x_scale)
         d3.select("#x_axis").transition().call(new_bottom_axis)
@@ -148,11 +156,15 @@ d3.csv("D3_data_journalism/assets/data/data.csv").then(function(census_data,err)
         state_labels.transition()
         .duration(1000)
         .attr("x",d => new_x_scale(d[chosen_x]))
+        if(value == chosen_x){
+            d3.selectAll("#x").classed("inactive",true)
+            d3.select(this).classed("active",true).classed("inactive",false)
+        }
     })
     d3.selectAll("#y").on("click",function(){
         var value = d3.select(this).attr("value")
         chosen_y = value
-
+        d3.select("#g_title").transition().text(`${chosen_x} by ${chosen_y}`)
         var new_y_scale = build_y_scale(census_data,chosen_y)
         var new_left_axis = d3.axisLeft(new_y_scale)
         d3.select("#y_axis").transition().call(yAxis)
@@ -164,6 +176,11 @@ d3.csv("D3_data_journalism/assets/data/data.csv").then(function(census_data,err)
         state_labels.transition()
         .duration(1000)
         .attr("y",d => yScale(d[chosen_y]))
+        if(value == chosen_y){
+            d3.selectAll("#y").classed("inactive",true)
+            d3.select(this).classed("active",true).classed("inactive",false)
+        }
     })
+
     });
     
