@@ -4,6 +4,6 @@ Hello there! This project is set to analyze the correlation between several fact
 
 ![ezgif com-gif-maker](https://user-images.githubusercontent.com/78937358/127726808-273afe0f-c7d4-4686-bed4-6db00c354395.gif)
 
-#https://jconcha56429.github.io/D3-challenge/
+https://jconcha56429.github.io/D3-challenge/
 
 contact info: jconcha56429@gmail.com
